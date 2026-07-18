@@ -25,12 +25,11 @@ async def move_arm(request: MoveRequest):
     await manager.robot.send_json({
         "type": "command",
         "command": "move",
-        "x": request.x,
-        "y": request.y,
-        "z": request.z,
-        "roll": request.roll,
-        "pitch": request.pitch,
-        "yaw": request.yaw,
+        "base": 30,
+        "shoulder": 45,
+        "elbow": 60,
+        "wrist": 10,
+        "gripper": 90,
         "speed": request.speed
     })
 
