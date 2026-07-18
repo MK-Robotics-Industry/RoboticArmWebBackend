@@ -165,3 +165,29 @@ async def set_speed(request: JointSpeedRequest):
     return {
         "message": f"Speed set to {request.speed}."
     }
+
+
+@router.post("/disable")
+async def disable_arm():
+
+    await send_command({
+        "type": "command",
+        "command": "disable",
+    })
+
+    return {
+        "message": "Robot disabled."
+    }
+
+
+@router.post('/enable')
+async def enable_arm():
+
+    await send_command({
+        "type": "command",
+        "command": "enable",
+    })
+
+    return {
+        "message": "Robot enabled."
+    }
