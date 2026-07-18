@@ -11,7 +11,7 @@ async def browser_socket(websocket: WebSocket):
 
     manager.browser = websocket
 
-    print("Browser Connected")
+    await websocket.send_json(manager.robot_status)
 
     try:
         while True:
