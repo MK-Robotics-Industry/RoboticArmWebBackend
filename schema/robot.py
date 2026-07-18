@@ -9,3 +9,9 @@ class MoveRequest(BaseModel):
     pitch: float
     yaw: float
     speed: int = 100
+
+class JointPositionRequest(BaseModel):
+    position: int
+
+class JointSpeedRequest(BaseModel):
+    speed:int    
