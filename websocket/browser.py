@@ -8,10 +8,9 @@ router = APIRouter()
 async def browser_socket(websocket: WebSocket):
 
     await websocket.accept()
+    manager.connect_browser(websocket)
 
-    manager.browser = websocket
-
-    await websocket.send_json(manager.robot_status)
+    await websocket.send_json(manager.status)
 
     try:
         while True:
@@ -21,5 +20,4 @@ async def browser_socket(websocket: WebSocket):
     except WebSocketDisconnect:
 
         print("Browser Disconnected")
-
-        manager.browser = None
+        manager.disconnect_browser(websocket)

@@ -11,9 +11,10 @@ from websocket.manager import manager
 
 router = APIRouter()
 
+
 @router.get("/status")
 def status():
-    return manager.robot_status
+    return manager.status
 
 
 @router.post("/home")
@@ -32,16 +33,23 @@ async def home_arm():
 @router.post("/move")
 async def move_arm(request: MoveRequest):
 
-    await send_command({
+    cmd_payload = {
         "type": "command",
         "command": "move",
-        "base": request.base,
-        "shoulder": request.shoulder,
-        "elbow": request.elbow,
-        "wrist": request.wrist,
-        "gripper": request.gripper,
         "speed": request.speed,
-    })
+    }
+    if request.base is not None:
+        cmd_payload["base"] = request.base
+    if request.shoulder is not None:
+        cmd_payload["shoulder"] = request.shoulder
+    if request.elbow is not None:
+        cmd_payload["elbow"] = request.elbow
+    if request.wrist is not None:
+        cmd_payload["wrist"] = request.wrist
+    if request.gripper is not None:
+        cmd_payload["gripper"] = request.gripper
+
+    await send_command(cmd_payload)
 
     return {
         "message": "Move command sent successfully."
@@ -153,7 +161,7 @@ async def close_gripper():
     }
 
 
-@router.post("/robot/set-speed")
+@router.post("/set-speed")
 async def set_speed(request: JointSpeedRequest):
 
     await send_command({

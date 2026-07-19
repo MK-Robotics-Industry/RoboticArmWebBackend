@@ -1,5 +1,4 @@
 import json
-from dataclasses import dataclass
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from websocket.manager import manager
 
@@ -12,7 +11,9 @@ async def robot_socket(websocket: WebSocket):
     await websocket.accept()
 
     manager.robot = websocket
-    manager.status["connected"] = False
+    manager.status["connected"] = True
+
+    await manager.broadcast_browser(manager.status)
 
     try:
 
@@ -24,12 +25,10 @@ async def robot_socket(websocket: WebSocket):
             if data.get('type') == "status":
                 manager.status.update(data)
 
-            if manager.browser:
-                await manager.browser.send_json(manager.status)
+            await manager.broadcast_browser(manager.status)
 
     except WebSocketDisconnect:
         
         manager.robot = None
         manager.status["connected"] = False
-
-
+        await manager.broadcast_browser(manager.status)
